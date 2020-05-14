@@ -34,9 +34,9 @@ using dialect::tile::ContractionOp;
 using dialect::tile::ContractionOpOperandAdaptor;
 using dialect::tile::getPaddingInfo;
 using dialect::tile::IndexOp;
+using dialect::tile::PrngOp;
 using dialect::tile::ReshapeOp;
 using dialect::tile::ReshapeOpOperandAdaptor;
-using dialect::tile::PrngOp;
 using dialect::tile::ShapeOp;
 using dialect::tile::ShapeOpOperandAdaptor;
 using dialect::tile::TraceOp;
@@ -816,13 +816,12 @@ struct ReshapeOpConversion : public OpConversionPattern<ReshapeOp> {
     ReshapeOpOperandAdaptor adaptor(operands);
 
     auto tensor = adaptor.tensor();
-    auto dims = adaptor.dims();
 
     TypeConverter typeConverter;
     auto resultType =
         typeConverter.convertType(op.result().getType()).cast<MemRefType>();
 
-    rewriter.replaceOpWithNewOp<stdx::ReshapeOp>(op, tensor, dims, resultType);
+    rewriter.replaceOpWithNewOp<stdx::ReshapeOp>(op, tensor, resultType);
     return success();
   }
 };
